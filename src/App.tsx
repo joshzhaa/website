@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import * as chess from './pkg/chess_rules_bg';
 import './App.css';
 
 // Square's key is its 1D index
@@ -26,10 +27,27 @@ function Board({
   function indexToVector(index: number) {
     return [Math.floor(index / width), index % width];
   }
-  const board = Array.from(Array(width * height).keys())
+  function showBoard() {
+    function showRow(y: number) {
+      let row = [];
+      for (let x = 0; x < width; x++) {
+        row.push(<Square piece={chess.piece(x, y)} key={vectorToIndex([x, y])} />);
+      }
+      return (
+        <div className="board-row">
+          {row}
+        </div>
+      );
+    }
+    let board = [];
+    for (let y = height - 1; y > 0; y--) {
+      board.push(showRow(y));
+    }
+    return board;
+  }
   return (
     <div className="board-row">
-      {board.map(i => <Square piece={pieces[i]} key={i} />)}
+      {showBoard()}
     </div>
   );
 }
